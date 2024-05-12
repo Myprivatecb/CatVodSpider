@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.github.catvod.demo"
-        minSdk 17
+        minSdk 26
         targetSdk 28
         buildConfigField("String", "CLIENT_ID", "\"${clientId}\"")
     }
@@ -49,4 +49,8 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'org.jsoup:jsoup:1.15.3'
+    implementation 'com.alibaba:fastjson:1.2.76'
+//    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    implementation 'io.github.pixee:java-security-toolkit:1.1.3'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
 }

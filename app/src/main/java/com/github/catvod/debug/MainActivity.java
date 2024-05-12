@@ -7,6 +7,7 @@ import android.widget.Button;
 import com.github.catvod.R;
 import com.github.catvod.crawler.Spider;
 import com.github.catvod.spider.Init;
+import com.github.catvod.spider.Wobg;
 import com.github.catvod.spider.Wogg;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
@@ -46,7 +47,7 @@ public class MainActivity extends Activity {
     private void initSpider() {
         try {
             Init.init(getApplicationContext());
-            spider = new Wogg();
+            spider = new Wobg();
             spider.init(this, "");
         } catch (Throwable e) {
             e.printStackTrace();
@@ -79,7 +80,7 @@ public class MainActivity extends Activity {
 
     public void detailContent() {
         try {
-            Logger.t("detailContent").d(spider.detailContent(Arrays.asList("2121173431")));
+            Logger.t("detailContent").d(spider.detailContent(Arrays.asList("/index.php/vod/detail/id/622.html")));
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -87,7 +88,7 @@ public class MainActivity extends Activity {
 
     public void playerContent() {
         try {
-            Logger.t("playerContent").d(spider.playerContent("轉存原畫", "kahf2rw5Uuk+652f55f6943ee2f75d8e4fa590b4ec65fd007f8c", new ArrayList<>()));
+            Logger.t("playerContent").d(spider.playerContent("轉存原畫", "Adq1tJvLBDs+663f920dcaab30b619b54e5db90dc9209637fd17", new ArrayList<>()));
         } catch (Throwable e) {
             e.printStackTrace();
         }

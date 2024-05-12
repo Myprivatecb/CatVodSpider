@@ -2,6 +2,8 @@ package com.github.catvod.net;
 
 import android.text.TextUtils;
 
+import org.jsoup.internal.StringUtil;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class OkResult {
     }
 
     public String getBody() {
-        return TextUtils.isEmpty(body) ? "" : body;
+        return StringUtil.isBlank(body) ? "" : body;
     }
 
     public Map<String, List<String>> getResp() {

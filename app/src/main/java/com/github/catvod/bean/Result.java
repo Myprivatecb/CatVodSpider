@@ -65,6 +65,9 @@ public class Result {
         return Result.get().classes(classes).vod(list).filters(filters).string();
     }
 
+    public static String string(Integer page,Integer pagecount,Integer limit,Integer total,List<Vod> list){
+        return Result.get().page(page,pagecount,limit,total).vod(list).string();
+    }
     public static String string(List<Class> classes, LinkedHashMap<String, List<Filter>> filters) {
         return Result.get().classes(classes).filters(filters).string();
     }
