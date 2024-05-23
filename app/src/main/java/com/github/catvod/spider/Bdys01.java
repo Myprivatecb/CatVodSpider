@@ -53,8 +53,8 @@ import okhttp3.Response;
 
 
 public class Bdys01 extends Spider {
-    private static final String siteUrl = "https://www.yjys.me";
-    private static final String siteHost = "www.yjys.me";
+    private static final String siteUrl = "https://www.yjys.top";
+    private static final String siteHost = "www.yjys.top";
     private String cookie="";
     private String referer="";
 
@@ -440,14 +440,14 @@ public class Bdys01 extends Spider {
                 urldblist.add(url3);
             }
             if(urldb.containsKey("m3u8")){
-                String m3u8 = urldb.getString("m3u8").replace("www.bde4.cc","www.yjys.me");
+                String m3u8 = urldb.getString("m3u8").replace("www.bde4.cc", siteHost);
                 urldblist.add(m3u8);
             }
             if(urldb.containsKey("m3u8_2")){
                 String m3u8_2 =urldb.getString("m3u8_2");
                 String[] m2=m3u8_2.split(",");
                 for(int i=0; i< m2.length ;i++){
-                    urldblist.add(m2[i].replace("www.bde4.cc","www.yjys.me"));
+                    urldblist.add(m2[i].replace("www.bde4.cc", siteHost));
                 }
             }
             int index =new SecureRandom().nextInt(urldblist.size());

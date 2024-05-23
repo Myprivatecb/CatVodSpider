@@ -15,6 +15,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -34,7 +36,7 @@ import okhttp3.Response;
  */
 public class Xb6v extends Spider {
 
-    private final String siteUrl = "http://www.xb6v.com";
+    private final String siteUrl = "https://www.xb6v.com";
     private String nextSearchUrlPrefix;
     private String nextSearchUrlSuffix;
 
@@ -134,24 +136,24 @@ public class Xb6v extends Spider {
             }
             if (vodItems.size() > 0) {
                 i++;
-                playMap.put(circuitName + i, TextUtils.join("#", vodItems));
+                playMap.put(circuitName + i, String.join("#", vodItems));
             }
         }
 
         String partHTML = doc.select(".context").html();
         String name = doc.select(".article_container > h1").text();
         String pic = doc.select("#post_content img").attr("src");
-        String typeName = getStrByRegex(Pattern.compile("◎类　　别　(.*?)<br>"), partHTML);
+        String typeName = getStrByRegex(Pattern.compile("<br>◎类　　别(.*?)<br>"), partHTML).strip();
         if (typeName.equals("")) typeName = doc.select("[rel=category tag]").text();
-        String year = getStrByRegex(Pattern.compile("◎年　　代　(.*?)<br>"), partHTML);
+        String year = getStrByRegex(Pattern.compile("◎年　　代(.*?)<br>"), partHTML).strip();
         if (year.equals("")) year = getStrByRegex(Pattern.compile("首播:(.*?)<br>"), partHTML);
-        String area = getStrByRegex(Pattern.compile("◎产　　地　(.*?)<br>"), partHTML);
+        String area = getStrByRegex(Pattern.compile("◎产　　地(.*?)<br>"), partHTML).strip();
         if (area.equals("")) area = getStrByRegex(Pattern.compile("地区:(.*?)<br>"), partHTML);
-        String remark = getStrByRegex(Pattern.compile("◎上映日期　(.*?)<br>"), partHTML);
-        String actor = getActorOrDirector(Pattern.compile("◎演　　员　(.*?)</p>"), partHTML);
-        if (actor.equals("")) actor = getActorOrDirector(Pattern.compile("◎主　　演　(.*?)</p>"), partHTML);
+        String remark = getStrByRegex(Pattern.compile("◎上映日期(.*?)<br>"), partHTML);
+        String actor = getActorOrDirector(Pattern.compile("◎演　　员(.*?)</p>"), partHTML);
+        if (actor.equals("")) actor = getActorOrDirector(Pattern.compile("◎主　　演(.*?)</p>"), partHTML);
         if (actor.equals("")) actor = getActorOrDirector(Pattern.compile("主演:(.*?)<br>"), partHTML);
-        String director = getActorOrDirector(Pattern.compile("◎导　　演　(.*?)<br>"), partHTML);
+        String director = getActorOrDirector(Pattern.compile("◎导　　演(.*?)<br>"), partHTML);
         if (director.equals("")) director = getActorOrDirector(Pattern.compile("导演:(.*?)<br>"), partHTML);
         String description = getDescription(Pattern.compile("◎简　　介(.*?)<hr>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL), partHTML);
         if (description.equals("")) description = getDescription(Pattern.compile("简介(.*?)</p>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL), partHTML);
@@ -167,8 +169,8 @@ public class Xb6v extends Spider {
         vod.setVodActor(actor);
         vod.setVodDirector(director);
         vod.setVodContent(description);
-        vod.setVodPlayFrom(TextUtils.join("$$$", playMap.keySet()));
-        vod.setVodPlayUrl(TextUtils.join("$$$", playMap.values()));
+        vod.setVodPlayFrom(String.join("$$$", playMap.keySet()));
+        vod.setVodPlayUrl(String.join("$$$", playMap.values()));
 
         return Result.string(vod);
     }
@@ -209,6 +211,7 @@ public class Xb6v extends Spider {
     @Override
     public String searchContent(String key, boolean quick, String pg) throws Exception {
         String searchUrl = siteUrl + "/e/search/index.php";
+//        String time = String.valueOf(System.currentTimeMillis() /1000);
         if (pg.equals("1")) {
             RequestBody formBody = new FormBody.Builder()
                     .add("show", "title")
@@ -217,12 +220,21 @@ public class Xb6v extends Spider {
                     .add("mid", "1")
                     .add("dopost", "search")
                     .add("submit", "")
-                    .addEncoded("keyboard", key)
+                    .addEncoded("keyboard", URLEncoder.encode(key, StandardCharsets.UTF_8.toString()))
                     .build();
             Request request = new Request.Builder().url(searchUrl)
-                    .addHeader("User-Agent", Util.CHROME)
+                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.139 Safari/537.36")
                     .addHeader("Origin", siteUrl)
                     .addHeader("Referer", siteUrl + "/")
+                    .addHeader("Host", "www.xb6v.com")
+                    .addHeader("Content-Length", "108")
+                    .addHeader("Sec-Fetch-Dest", "document")
+                    .addHeader("Sec-Fetch-Mode", "navigate")
+                    .addHeader("Sec-Fetch-Site", "same-origin")
+                    .addHeader("Sec-Fetch-User", "?1")
+                    .addHeader("Upgrade-Insecure-Requests", "1")
+//                    .addHeader("Cookie", "tinmklastsearchtime=" + time)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
                     .post(formBody)
                     .build();
             Response response = OkHttp.newCall(request);

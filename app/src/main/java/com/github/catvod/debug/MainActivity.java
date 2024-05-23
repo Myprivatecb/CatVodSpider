@@ -9,6 +9,7 @@ import com.github.catvod.crawler.Spider;
 import com.github.catvod.spider.Init;
 import com.github.catvod.spider.Wobg;
 import com.github.catvod.spider.Wogg;
+import com.github.catvod.spider.XiaoZhiTiao;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -47,7 +48,7 @@ public class MainActivity extends Activity {
     private void initSpider() {
         try {
             Init.init(getApplicationContext());
-            spider = new Wobg();
+            spider = new XiaoZhiTiao();
             spider.init(this, "");
         } catch (Throwable e) {
             e.printStackTrace();
@@ -96,7 +97,7 @@ public class MainActivity extends Activity {
 
     public void searchContent() {
         try {
-            Logger.t("searchContent").d(spider.searchContent("我的人间烟火", false));
+            Logger.t("searchContent").d(spider.searchContent("毕业", false));
         } catch (Throwable e) {
             e.printStackTrace();
         }
