@@ -7,9 +7,7 @@ import android.widget.Button;
 import com.github.catvod.R;
 import com.github.catvod.crawler.Spider;
 import com.github.catvod.spider.Init;
-import com.github.catvod.spider.Wobg;
-import com.github.catvod.spider.Wogg;
-import com.github.catvod.spider.XiaoZhiTiao;
+import com.github.catvod.spider.Uvod;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -48,7 +46,7 @@ public class MainActivity extends Activity {
     private void initSpider() {
         try {
             Init.init(getApplicationContext());
-            spider = new XiaoZhiTiao();
+            spider = new Uvod();
             spider.init(this, "");
         } catch (Throwable e) {
             e.printStackTrace();
@@ -73,7 +71,10 @@ public class MainActivity extends Activity {
 
     public void categoryContent() {
         try {
-            Logger.t("categoryContent").d(spider.categoryContent("movie", "1", true, new HashMap<>()));
+            HashMap<String, String> extend = new HashMap<>();
+            extend.put("c", "19");
+            extend.put("year", "2024");
+            Logger.t("categoryContent").d(spider.categoryContent("3", "2", true, extend));
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -81,7 +82,7 @@ public class MainActivity extends Activity {
 
     public void detailContent() {
         try {
-            Logger.t("detailContent").d(spider.detailContent(Arrays.asList("/index.php/vod/detail/id/622.html")));
+            Logger.t("detailContent").d(spider.detailContent(Arrays.asList("78702")));
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -89,7 +90,7 @@ public class MainActivity extends Activity {
 
     public void playerContent() {
         try {
-            Logger.t("playerContent").d(spider.playerContent("轉存原畫", "Adq1tJvLBDs+663f920dcaab30b619b54e5db90dc9209637fd17", new ArrayList<>()));
+            Logger.t("playerContent").d(spider.playerContent("", "382044/1/78", new ArrayList<>()));
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -97,7 +98,7 @@ public class MainActivity extends Activity {
 
     public void searchContent() {
         try {
-            Logger.t("searchContent").d(spider.searchContent("毕业", false));
+            Logger.t("searchContent").d(spider.searchContent("我的人间烟火", false));
         } catch (Throwable e) {
             e.printStackTrace();
         }

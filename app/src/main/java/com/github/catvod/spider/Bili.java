@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.github.catvod.bean.Class;
+import com.github.catvod.bean.Danmaku;
 import com.github.catvod.bean.Filter;
 import com.github.catvod.bean.Result;
 import com.github.catvod.bean.Vod;
@@ -38,7 +39,6 @@ import java.util.Map;
 public class Bili extends Spider {
 
     private static final String COOKIE = "buvid3=84B0395D-C9F2-C490-E92E-A09AB48FE26E71636infoc";
-    private static Map<String, String> audios;
     private static String cookie;
 
     private JsonObject extend;
@@ -52,13 +52,6 @@ public class Bili extends Spider {
         headers.put("Referer", "https://www.bilibili.com");
         if (cookie != null) headers.put("cookie", cookie);
         return headers;
-    }
-
-    private void setAudio() {
-        audios = new HashMap<>();
-        audios.put("30280", "192000");
-        audios.put("30232", "132000");
-        audios.put("30216", "64000");
     }
 
     private void setCookie() {
@@ -83,7 +76,6 @@ public class Bili extends Spider {
     public void init(Context context, String extend) throws Exception {
         this.extend = Json.safeObject(extend);
         setCookie();
-        setAudio();
     }
 
     @Override
@@ -208,7 +200,7 @@ public class Bili extends Spider {
             url.add(acceptDesc[i]);
             url.add(Proxy.getUrl() + "?do=bili" + "&aid=" + aid + "&cid=" + cid + "&qn=" + acceptQuality[i] + "&type=mpd");
         }
-        return Result.get().url(url).danmaku(dan).dash().header(getHeader()).string();
+        return Result.get().url(url).danmaku(Arrays.asList(Danmaku.create().name("B站").url(dan))).dash().header(getHeader()).string();
     }
 
     public static Object[] proxy(Map<String, String> params) {
@@ -231,9 +223,17 @@ public class Bili extends Spider {
         return result;
     }
 
+    private static HashMap<String, String> getAudioFormat() {
+        HashMap<String, String> audios = new HashMap<>();
+        audios.put("30280", "192000");
+        audios.put("30232", "132000");
+        audios.put("30216", "64000");
+        return audios;
+    }
+
     private static void findAudio(Dash dash, StringBuilder sb) {
         for (Media audio : dash.getAudio()) {
-            for (String key : audios.keySet()) {
+            for (String key : getAudioFormat().keySet()) {
                 if (audio.getId().equals(key)) {
                     sb.append(getMedia(audio));
                 }
@@ -253,7 +253,7 @@ public class Bili extends Spider {
         if (media.getMimeType().startsWith("video")) {
             return getAdaptationSet(media, String.format(Locale.getDefault(), "height='%s' width='%s' frameRate='%s' sar='%s'", media.getHeight(), media.getWidth(), media.getFrameRate(), media.getSar()));
         } else if (media.getMimeType().startsWith("audio")) {
-            return getAdaptationSet(media, String.format("numChannels='2' sampleRate='%s'", audios.get(media.getId())));
+            return getAdaptationSet(media, String.format("numChannels='2' sampleRate='%s'", getAudioFormat().get(media.getId())));
         } else {
             return "";
         }
