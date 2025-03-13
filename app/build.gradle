@@ -28,8 +28,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     configurations.configureEach {
@@ -47,4 +47,8 @@ dependencies {
     implementation 'cn.wanghaomiao:JsoupXpath:2.5.1'
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'org.jsoup:jsoup:1.18.3'
+//    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    implementation 'com.alibaba:fastjson:1.2.83'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+    implementation "io.github.pixee:java-security-toolkit:1.2.1"
 }
